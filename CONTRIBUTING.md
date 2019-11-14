@@ -75,19 +75,19 @@ official Kibana repo, which we'll refer to in later code snippets.
 
 ### Branching
 
-* All work on the next major release goes into master.
-* Past major release branches are named `{majorVersion}.x`. They contain work that will go into the next minor release. For example, if the next minor release is `5.2.0`, work for it should go into the `5.x` branch.
-* Past minor release branches are named `{majorVersion}.{minorVersion}`. They contain work that will go into the next patch release. For example, if the next patch release is `5.3.1`, work for it should go into the `5.3` branch.
-* All work is done on feature branches and merged into one of these branches.
-* Where appropriate, we'll backport changes into older release branches.
+- All work on the next major release goes into master.
+- Past major release branches are named `{majorVersion}.x`. They contain work that will go into the next minor release. For example, if the next minor release is `5.2.0`, work for it should go into the `5.x` branch.
+- Past minor release branches are named `{majorVersion}.{minorVersion}`. They contain work that will go into the next patch release. For example, if the next patch release is `5.3.1`, work for it should go into the `5.3` branch.
+- All work is done on feature branches and merged into one of these branches.
+- Where appropriate, we'll backport changes into older release branches.
 
 ### Commits and Merging
 
-* Feel free to make as many commits as you want, while working on a branch.
-* When submitting a PR for review, please perform an interactive rebase to present a logical history that's easy for the reviewers to follow.
-* Please use your commit messages to include helpful information on your changes, e.g. changes to APIs, UX changes, bugs fixed, and an explanation of *why* you made the changes that you did.
-* Resolve merge conflicts by rebasing the target branch over your feature branch, and force-pushing (see below for instructions).
-* When merging, we'll squash your commits into a single commit.
+- Feel free to make as many commits as you want, while working on a branch.
+- When submitting a PR for review, please perform an interactive rebase to present a logical history that's easy for the reviewers to follow.
+- Please use your commit messages to include helpful information on your changes, e.g. changes to APIs, UX changes, bugs fixed, and an explanation of *why* you made the changes that you did.
+- Resolve merge conflicts by rebasing the target branch over your feature branch, and force-pushing (see below for instructions).
+- When merging, we'll squash your commits into a single commit.
 
 #### Rebasing and fixing merge conflicts
 
@@ -97,7 +97,7 @@ Here's how you should rebase master onto your branch, and how to fix merge confl
 
 First, make sure master is up-to-date.
 
-```
+```bash
 git checkout master
 git fetch upstream
 git rebase upstream/master
@@ -105,7 +105,7 @@ git rebase upstream/master
 
 Then, check out your branch and rebase master on top of it, which will apply all of the new commits on master to your branch, and then apply all of your branch's new commits after that.
 
-```
+```bash
 git checkout name-of-your-branch
 git rebase master
 ```
@@ -118,7 +118,7 @@ Once you've resolved all of the merge conflicts, use `git add -A` to stage them 
 
 When the rebase has completed, you will need to force push your branch because the history is now completely different than what's on the remote. **This is potentially dangerous** because it will completely overwrite what you have on the remote, so you need to be sure that you haven't lost any work when resolving merge conflicts. (If there weren't any merge conflicts, then you can force push without having to worry about this.)
 
-```
+```bash
 git push origin name-of-your-branch --force
 ```
 
@@ -126,7 +126,7 @@ This will overwrite the remote branch with what you have locally. You're done!
 
 **Note that you should not run `git pull`**, for example in response to a push rejection like this:
 
-```
+```bash
 ! [rejected] name-of-your-branch -> name-of-your-branch (non-fast-forward)
 error: failed to push some refs to 'https://github.com/YourGitHubHandle/kibana.git'
 hint: Updates were rejected because the tip of your current branch is behind
@@ -139,10 +139,10 @@ Assuming you've successfully rebased and you're happy with the code, you should 
 
 ### What Goes Into a Pull Request
 
-* Please include an explanation of your changes in your PR description.
-* Links to relevant issues, external resources, or related PRs are very important and useful.
-* Please update any tests that pertain to your code, and add new tests where appropriate.
-* See [Submitting a Pull Request](#submitting-a-pull-request) for more info.
+- Please include an explanation of your changes in your PR description.
+- Links to relevant issues, external resources, or related PRs are very important and useful.
+- Please update any tests that pertain to your code, and add new tests where appropriate.
+- See [Submitting a Pull Request](#submitting-a-pull-request) for more info.
 
 ## Contributing Code
 
@@ -171,7 +171,7 @@ Bootstrap Kibana and install all the dependencies
 yarn kbn bootstrap
 ```
 
-(You can also run `yarn kbn` to see the other available commands. For more info about this tool, see https://github.com/elastic/kibana/tree/master/packages/kbn-pm.)
+You can also run `yarn kbn` to see the other available commands. For more info about this tool, see [./packages/kbn-pm](./packages/kbn-pm).
 
 #### Increase node.js heap size
 
@@ -214,16 +214,18 @@ If you're just getting started with Elasticsearch, you could use the following c
 ```bash
 node scripts/makelogs --auth <username>:<password>
 ```
+
 > The default username and password combination are `elastic:changeme`
 
 > Make sure to execute `node scripts/makelogs` *after* elasticsearch is up and running!
+
 ### Running Elasticsearch Remotely
 
 You can save some system resources, and the effort of generating sample data, if you have a remote Elasticsearch cluster to connect to. (**Elasticians: you do! Check with your team about where to find credentials**)
 
 You'll need to [create a `kibana.dev.yml`](#customizing-configkibanadevyml) and add the following to it:
 
-```
+```yaml
 elasticsearch.hosts:
   - {{ url }}
 elasticsearch.username: {{ username }}
@@ -233,7 +235,7 @@ elasticsearch.ssl.verificationMode: none
 
 If many other users will be interacting with your remote cluster, you'll want to add the following to avoid causing conflicts:
 
-```
+```yaml
 kibana.index: '.{YourGitHubHandle}-kibana'
 xpack.task_manager.index: '.{YourGitHubHandle}-task-manager-kibana'
 ```
@@ -270,7 +272,7 @@ yarn start --oss
 
 If you're installing dependencies and seeing an error that looks something like
 
-```
+```bash
 Unsupported URL Type: link:packages/eslint-config-kibana
 ```
 
@@ -282,9 +284,9 @@ The `config/kibana.yml` file stores user configuration directives. Since this fi
 
 #### Potential Optimization Pitfalls
 
- - Webpack is trying to include a file in the bundle that I deleted and is now complaining about it is missing
- - A module id that used to resolve to a single file now resolves to a directory, but webpack isn't adapting
- - (if you discover other scenarios, please send a PR!)
+- Webpack is trying to include a file in the bundle that I deleted and is now complaining about it is missing
+- A module id that used to resolve to a single file now resolves to a directory, but webpack isn't adapting
+- (if you discover other scenarios, please send a PR!)
 
 #### Setting Up SSL
 
@@ -332,6 +334,7 @@ Note that for VSCode, to enable "live" linting of TypeScript (and other) file ty
 All user-facing labels and info texts in Kibana should be internationalized. Please take a look at the [readme](packages/kbn-i18n/README.md) and the [guideline](packages/kbn-i18n/GUIDELINE.md) of the i18n package on how to do so.
 
 In order to enable translations in the React parts of the application, the top most component of every `ReactDOM.render` call should be an `I18nContext`:
+
 ```jsx
 import { I18nContext } from 'ui/i18n';
 
@@ -365,6 +368,7 @@ yarn build --help
 ```
 
 macOS users on a machine with a discrete graphics card may see significant speedups (up to 2x) when running tests by changing your terminal emulator's GPU settings. In iTerm2:
+
 - Open Preferences (Command + ,)
 - In the General tab, under the "Magic" section, ensure "GPU rendering" is checked
 - Open "Advanced GPU Settings..."
@@ -372,9 +376,11 @@ macOS users on a machine with a discrete graphics card may see significant speed
 - Restart iTerm
 
 ### Debugging Server Code
+
 `yarn debug` will start the server with Node's inspect flag. Kibana's development mode will start three processes on ports `9229`, `9230`, and `9231`. Chrome's developer tools need to be configured to connect to all three connections. Add `localhost:<port>` for each Kibana process in Chrome's developer tools connection tab.
 
 ### Unit testing frameworks
+
 Kibana is migrating unit testing from Mocha to Jest. Legacy unit tests still
 exist in Mocha but all new unit tests should be written in Jest. Mocha tests
 are contained in `__tests__` directories. Whereas Jest tests are stored in
@@ -395,17 +401,30 @@ The following table outlines possible test file locations and how to invoke them
 For X-Pack tests located in `x-pack/` see [X-Pack Testing](x-pack/README.md#testing)
 
 Test runner arguments:
- - Where applicable, the optional arguments `-t=regexp` or `--grep=regexp` will only run tests or test suites whose descriptions matches the regular expression.
- - `[test path]` is the relative path to the test file.
+
+- Where applicable, the optional arguments `-t=regexp` or `--grep=regexp` will only run tests or test suites whose descriptions matches the regular expression.
+- `[test path]` is the relative path to the test file.
 
  Examples:
-  - Run the entire elasticsearch_service test suite with yarn:
-    `node scripts/jest src/core/server/elasticsearch/elasticsearch_service.test.ts`
-  - Run the jest test case whose description matches 'stops both admin and data clients':
-    `node scripts/jest -t 'stops both admin and data clients' src/core/server/elasticsearch/elasticsearch_service.test.ts`
-  - Run the api integration test case whose description matches the given string:
-    `node scripts/functional_tests_server --config test/api_integration/config.js`
-    `node scripts/functional_test_runner --config test/api_integration/config.js --grep='should return 404 if id does not match any sample data sets'`
+
+- Run the entire elasticsearch_service test suite with yarn:  
+  
+  ```bash
+  node scripts/jest src/core/server/elasticsearch/elasticsearch_service.test.ts
+  ```
+
+- Run the jest test case whose description matches 'stops both admin and data clients':  
+  
+  ```bash
+  node scripts/jest -t 'stops both admin and data clients' src/core/server/elasticsearch/elasticsearch_service.test.ts
+  ```
+
+- Run the api integration test case whose description matches the given string:  
+  
+  ```bash
+  node scripts/functional_tests_server --config test/api_integration/config.js
+  node scripts/functional_test_runner --config test/api_integration/config.js --grep='should return 404 if id does not match any sample data sets'
+  ```
 
 ### Debugging Unit Tests
 
@@ -449,7 +468,6 @@ yarn test:dev
 
 In the screenshot below, you'll notice the URL is `localhost:9876/debug.html`. You can append a `grep` query parameter to this URL and set it to a string value which will be used to exclude tests which don't match. For example, if you changed the URL to `localhost:9876/debug.html?query=my test` and then refreshed the browser, you'd only see tests run which contain "my test" in the test description.
 
-
 ![Browser test debugging](http://i.imgur.com/DwHxgfq.png)
 
 ### Unit Testing Plugins
@@ -469,14 +487,14 @@ yarn test:browser --dev # remove the --dev flag to run them once and close
 
 ##### Testing IE on OS X
 
-* [Download VMWare Fusion](http://www.vmware.com/products/fusion/fusion-evaluation.html).
-* [Download IE virtual machines](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/#downloads) for VMWare.
-* Open VMWare and go to Window > Virtual Machine Library. Unzip the virtual machine and drag the .vmx file into your Virtual Machine Library.
-* Right-click on the virtual machine you just added to your library and select "Snapshots...", and then click the "Take" button in the modal that opens. You can roll back to this snapshot when the VM expires in 90 days.
-* In System Preferences > Sharing, change your computer name to be something simple, e.g. "computer".
-* Run Kibana with `yarn start --host=computer.local` (substituting your computer name).
-* Now you can run your VM, open the browser, and navigate to `http://computer.local:5601` to test Kibana.
-* Alternatively you can use browserstack 
+- [Download VMWare Fusion](http://www.vmware.com/products/fusion/fusion-evaluation.html).
+- [Download IE virtual machines](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/#downloads) for VMWare.
+- Open VMWare and go to Window > Virtual Machine Library. Unzip the virtual machine and drag the .vmx file into your Virtual Machine Library.
+- Right-click on the virtual machine you just added to your library and select "Snapshots...", and then click the "Take" button in the modal that opens. You can roll back to this snapshot when the VM expires in 90 days.
+- In System Preferences > Sharing, change your computer name to be something simple, e.g. "computer".
+- Run Kibana with `yarn start --host=computer.local` (substituting your computer name).
+- Now you can run your VM, open the browser, and navigate to `http://computer.local:5601` to test Kibana.
+- Alternatively you can use browserstack
 
 #### Running Browser Automation Tests
 
@@ -527,15 +545,15 @@ To include your change in the Release Notes:
 1. In the title, summarize what the PR accomplishes in language that is meaningful to the user.  In general, use present tense (for example, Adds, Fixes) in sentence case.
 2. Label the PR with the targeted version (ex: `v7.3.0`).
 3. Label the PR with the appropriate GitHub labels:
-    * For a new feature or functionality, use `release_note:enhancement`.
-    * For an external-facing fix, use `release_note:fix`. Exception: docs, build, and test fixes do not go in the Release Notes. Neither fixes for issues that were only on `master` and never have been released.
-    * For a deprecated feature, use `release_note:deprecation`.
-    * For a breaking change, use `release_note:breaking`.
-    * To **NOT** include your changes in the Release Notes, please use `release_note:skip`.
+    - For a new feature or functionality, use `release_note:enhancement`.
+    - For an external-facing fix, use `release_note:fix`. Exception: docs, build, and test fixes do not go in the Release Notes. Neither fixes for issues that were only on `master` and never have been released.
+    - For a deprecated feature, use `release_note:deprecation`.
+    - For a breaking change, use `release_note:breaking`.
+    - To **NOT** include your changes in the Release Notes, please use `release_note:skip`.
 
 We also produce a blog post that details more important breaking API changes every minor and major release. If the PR includes a breaking API change, apply the label `release_note:dev_docs`. Additionally add a brief summary of the break at the bottom of the PR using the format below:
 
-```
+```md
 # Dev Docs
 
 ## Name the feature with the break (ex: Visualize Loader)
